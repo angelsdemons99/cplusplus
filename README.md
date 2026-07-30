@@ -1,59 +1,50 @@
 # C++ Practice Projects
 
-This folder contains a small collection of beginner-friendly C++ programs that demonstrate basic console input/output, simple calculations, and basic problem-solving.
+A curated collection of beginner-friendly C++ exercises demonstrating console I/O, simple algorithms, and file-based data processing.
 
-## Project Files
+## Projects
 
-- **helloworld.cpp**  
-  A simple introductory program that prints "Hello World" to the console.
+- `helloworld/` — prints `Hello World` to the console.
+- `statsengine/` — command-line statistics calculator for mean, min/max, median, variance, standard deviation, range, and mode.
+- `swap/` — integer swapping example.
+- `market-data-reader/` — CSV market data loader and pricing statistics demo.
 
-- **statsengine.cpp**  
-  A small statistics calculator that asks the user for a set of numbers and displays common measures such as:
-  - Mean
-  - Minimum
-  - Maximum
-  - Median
-  - Variance
-  - Standard deviation
-  - Range
-  - Mode
+## Build
 
-- **swap.cpp**  
-  A basic program that takes two integers, swaps their values, and displays the result.
-
-## How to Compile
-
-From the project folder, you can compile each file with:
-
-```bash
-g++ helloworld.cpp -o helloworld
-g++ statsengine.cpp -o statsengine
-g++ swap.cpp -o swap
-```
-
-## How to Run
-
-```bash
-./helloworld
-./statsengine
-./swap
-```
-
-On Windows PowerShell, run the compiled executables like this:
+Build each project with a C++17-compatible compiler. Example commands:
 
 ```powershell
-.\helloworld.exe
-.\statsengine.exe
-.\swap.exe
+cd c:\Users\dyao0\Desktop\c++
+g++ -std=c++17 -O2 -Wall -Wextra -o helloworld\helloworld.exe helloworld\helloworld.cpp
+g++ -std=c++17 -O2 -Wall -Wextra -o statsengine\statsengine.exe statsengine\statsengine.cpp
+g++ -std=c++17 -O2 -Wall -Wextra -o swap\swap.exe swap\swap.cpp
+g++ -std=c++17 -O2 -Wall -Wextra -o market-data-reader\market-data-reader.exe market-data-reader\main.cpp market-data-reader\MarketData.cpp market-data-reader\Statistics.cpp
 ```
 
-## What You’ll Learn
+## Run
 
-These examples are a good starting point for understanding:
+From the repository root, run the compiled executables like this:
 
-- C++ program structure
-- Variables and user input
-- Basic control flow
-- Simple algorithms and data handling
+```powershell
+.\helloworld\helloworld.exe
+.\statsengine\statsengine.exe
+.\swap\swap.exe
+.\market-data-reader\market-data-reader.exe
+```
 
-Enjoy exploring and building on these examples!
+The market data reader expects `market-data-reader\market_data.csv` in its working directory.
+
+## Notes
+
+- Source files and sample data are tracked in Git.
+- Build outputs such as `.exe` files are ignored by `.gitignore`.
+- This repository is intended for learning and practicing foundational C++ patterns.
+
+## Suggestions
+
+If you want to make the repo more professional, consider:
+
+- adding a `LICENSE` file,
+- adding per-project README files for each example,
+- validating CSV input before numeric conversion,
+- and adding a small build script or `Makefile`.
