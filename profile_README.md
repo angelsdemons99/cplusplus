@@ -1,31 +1,31 @@
 # About Me
 
-I am a developer practicing C++ through small, hands-on projects focused on console applications, data parsing, and core algorithm implementation.
+I am a developer focused on quantitative software engineering with an emphasis on C++ systems, data ingestion, and numerical analytics.
 
-## What I’m working on
+## Current focus
 
-- Beginner-friendly C++ examples
-- File parsing and CSV processing
-- Basic statistical analysis
-- Improving code quality and project organization
+- implementing data parsers for CSV market feeds
+- developing statistical functions for dependent datasets
+- building reproducible, modular C++ codebases
+- refining low-latency data processing patterns
 
-## Skills I’m building
+## Core strengths
 
-- C++17 programming
-- console I/O and file handling
-- vector and STL usage
-- modular program structure
+- C++17 development for numerical and systems code
+- structured data ingestion and parsing
+- statistical and algorithmic analysis
+- clean, modular project architecture
 
-## What I want to demonstrate
+## What I want to show
 
-- clean repository structure
-- clearly separated project examples
-- practical, step-by-step learning projects
-- readiness to move into larger C++ applications
+- disciplined code organization for quantitative workflows
+- practical examples of market-data processing
+- robust handling of structured data inputs
+- a foundation for scaling to risk or pricing systems
 
-## Next steps
+## Next priorities
 
-- add a license to open-source my projects
-- add build scripts for easier compilation
-- improve input validation and error handling
-- write project-specific README files
+- add a permissive open-source license
+- introduce build scripts for repeatable compilation
+- strengthen input validation and error handling
+- document key modules with focused README files
