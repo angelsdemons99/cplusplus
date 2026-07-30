@@ -33,18 +33,3 @@ From the repository root, run the compiled executables like this:
 ```
 
 The market data reader expects `market-data-reader\market_data.csv` in its working directory.
-
-## Notes
-
-- Source files and sample data are tracked in Git.
-- Build outputs such as `.exe` files are ignored by `.gitignore`.
-- This repository is intended for learning and practicing foundational C++ patterns.
-
-## Suggestions
-
-If you want to make the repo more professional, consider:
-
-- adding a `LICENSE` file,
-- adding per-project README files for each example,
-- validating CSV input before numeric conversion,
-- and adding a small build script or `Makefile`.
