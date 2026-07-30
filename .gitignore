@@ -1,0 +1,7 @@
+﻿# Ignore build artifacts
+*.exe
+*.o
+*.obj
+*.pdb
+*.log
+
