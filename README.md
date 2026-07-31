@@ -1,6 +1,6 @@
 # C++ Practice Projects
 
-A curated collection of beginner-friendly C++ exercises demonstrating console I/O, simple algorithms, and file-based data processing.
+A curated collection of beginner-friendly C++ exercises demonstrating console I/O, simple algorithms, file-based data processing, and early portfolio-analysis experiments.
 
 ## Projects
 
@@ -8,6 +8,7 @@ A curated collection of beginner-friendly C++ exercises demonstrating console I/
 - `statsengine/` — command-line statistics calculator for mean, min/max, median, variance, standard deviation, range, and mode.
 - `swap/` — integer swapping example.
 - `market-data-reader/` — CSV market data loader and pricing statistics demo.
+- `portfolio-analyzer/` — early project for loading stock data and exploring portfolio-related analysis helpers.
 
 ## Build
 
@@ -19,6 +20,7 @@ g++ -std=c++17 -O2 -Wall -Wextra -o helloworld\helloworld.exe helloworld\hellowo
 g++ -std=c++17 -O2 -Wall -Wextra -o statsengine\statsengine.exe statsengine\statsengine.cpp
 g++ -std=c++17 -O2 -Wall -Wextra -o swap\swap.exe swap\swap.cpp
 g++ -std=c++17 -O2 -Wall -Wextra -o market-data-reader\market-data-reader.exe market-data-reader\main.cpp market-data-reader\MarketData.cpp market-data-reader\Statistics.cpp
+g++ -std=c++17 -O2 -Wall -Wextra -Iportfolio-analyzer\include -o portfolio-analyzer\portfolio-analyzer.exe portfolio-analyzer\src\main.cpp portfolio-analyzer\src\MarketData.cpp portfolio-analyzer\src\Portfolio.cpp portfolio-analyzer\src\Statistics.cpp
 ```
 
 ## Run
@@ -30,6 +32,8 @@ From the repository root, run the compiled executables like this:
 .\statsengine\statsengine.exe
 .\swap\swap.exe
 .\market-data-reader\market-data-reader.exe
+.\portfolio-analyzer\portfolio-analyzer.exe
 ```
 
 The market data reader expects `market-data-reader\market_data.csv` in its working directory.
+The portfolio analyzer reads sample data files from `portfolio-analyzer\data`.
