@@ -4,9 +4,7 @@ A curated collection of beginner-friendly C++ exercises demonstrating console I/
 
 ## Projects
 
-- `helloworld/` — prints `Hello World` to the console.
 - `statsengine/` — command-line statistics calculator for mean, min/max, median, variance, standard deviation, range, and mode.
-- `swap/` — integer swapping example.
 - `market-data-reader/` — CSV market data loader and pricing statistics demo.
 - `portfolio-analyzer/` — early project for loading stock data and exploring portfolio-related analysis helpers.
 
@@ -16,9 +14,7 @@ Build each project with a C++17-compatible compiler. Example commands:
 
 ```powershell
 cd c:\Users\dyao0\Desktop\c++
-g++ -std=c++17 -O2 -Wall -Wextra -o helloworld\helloworld.exe helloworld\helloworld.cpp
 g++ -std=c++17 -O2 -Wall -Wextra -o statsengine\statsengine.exe statsengine\statsengine.cpp
-g++ -std=c++17 -O2 -Wall -Wextra -o swap\swap.exe swap\swap.cpp
 g++ -std=c++17 -O2 -Wall -Wextra -o market-data-reader\market-data-reader.exe market-data-reader\main.cpp market-data-reader\MarketData.cpp market-data-reader\Statistics.cpp
 g++ -std=c++17 -O2 -Wall -Wextra -Iportfolio-analyzer\include -o portfolio-analyzer\portfolio-analyzer.exe portfolio-analyzer\src\main.cpp portfolio-analyzer\src\MarketData.cpp portfolio-analyzer\src\Portfolio.cpp portfolio-analyzer\src\Statistics.cpp
 ```
@@ -28,9 +24,7 @@ g++ -std=c++17 -O2 -Wall -Wextra -Iportfolio-analyzer\include -o portfolio-analy
 From the repository root, run the compiled executables like this:
 
 ```powershell
-.\helloworld\helloworld.exe
 .\statsengine\statsengine.exe
-.\swap\swap.exe
 .\market-data-reader\market-data-reader.exe
 .\portfolio-analyzer\portfolio-analyzer.exe
 ```
