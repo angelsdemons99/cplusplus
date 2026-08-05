@@ -64,5 +64,10 @@ int main()
     std::cout << "Minumum Daily Return : " << minimum(returns) << std::endl;
     std::cout << "Maximum Daily Return : " << maximum(returns) << std::endl;
     std::cout << "Number of Trading Days : " << aaplClosingPrices.size() << std::endl;
+    std::cout << "How much are you investing?" << std::endl;
+    double principal;
+    std::cin >> principal;
+    std::cout << "Cumulative Return over this time-series : $" << portfolioValue(principal, returns) << std::endl;
+
     return 0;
 }

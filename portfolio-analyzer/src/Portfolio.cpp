@@ -60,3 +60,12 @@ std::vector<double> calculatePortfolioReturns(const std::vector<Position> &posit
     }
     return returns;
 }
+double portfolioValue(const double &principal, const std::vector<double> &returns)
+{
+    double cumulativeReturnFinal = principal;
+    for (double rtrn : returns)
+    {
+        cumulativeReturnFinal += (rtrn * cumulativeReturnFinal);
+    }
+    return cumulativeReturnFinal;
+}

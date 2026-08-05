@@ -31,7 +31,7 @@ g++ -std=c++17 -O2 -Wall -Wextra -Iportfolio-analyzer/include -o portfolio-analy
 ./portfolio-analyzer/portfolio-analyzer.exe
 ```
 
-The program reads the sample data files from the data folder, aligns the price histories to their latest common start date, computes daily returns for AAPL, MSFT, and NVDA, and prints a portfolio summary.
+The program reads the sample data files from the data folder, aligns the price histories to their latest common start date, computes daily returns for AAPL, MSFT, and NVDA, and prints a portfolio summary. It also prompts for an investment amount and computes the cumulative portfolio value over the return series.
 
 ## Status
 

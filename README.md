@@ -6,7 +6,7 @@ A curated collection of beginner-friendly C++ exercises demonstrating console I/
 
 - `statsengine/` — command-line statistics calculator for mean, min/max, median, variance, standard deviation, range, and mode.
 - `market-data-reader/` — CSV market data loader and pricing statistics demo.
-- `portfolio-analyzer/` — early project for loading stock data (AAPL, MSFT, NVDA), aligning price histories, and calculating portfolio returns.
+- `portfolio-analyzer/` — early project for loading stock data (AAPL, MSFT, NVDA), aligning price histories, calculating portfolio returns, and estimating cumulative portfolio value.
 
 ## Build
 

@@ -13,5 +13,5 @@ struct Position
 
 std::vector<double> calculateDailyReturns(const std::vector<double> &prices);
 std::vector<double> calculatePortfolioReturns(const std::vector<Position> &positions);
-
+double portfolioValue(const double &principal, const std::vector<double> &returns);
 #endif
