@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 
 std::vector<MarketData> loadMarketData(const std::string &filename)
 {
@@ -88,4 +89,67 @@ std::vector<double> extractClosingPrices(
     }
 
     return closingPrices;
+}
+
+void trimToStartDate(std::vector<MarketData> &data, const std::string &startDate)
+{
+    auto it = std::find_if(data.begin(), data.end(), [startDate](const MarketData &row)
+                           { return row.date == startDate; });
+    if (it != data.end())
+    {
+        data.erase(data.begin(), it);
+    }
+    else
+    {
+        std::cout << "Could not find date." << std::endl;
+    }
+}
+
+std::string findLatestCommonDate(std::vector<std::reference_wrapper<std::vector<MarketData>>> &datasets)
+{
+    std::vector<std::string> dates;
+    for (auto &data : datasets)
+    {
+        if (!data.get().empty())
+        {
+            dates.push_back(data.get().front().date);
+        }
+    }
+    std::string latestDate = dates[0];
+    for (int i = 1; i < dates.size(); i++)
+    {
+        if (dates[i] > latestDate)
+        {
+            latestDate = dates[i];
+        }
+    }
+    return latestDate;
+}
+
+bool dataIsAligned(const std::vector<std::reference_wrapper<std::vector<MarketData>>> &datasets)
+{
+    if (datasets.empty())
+    {
+        return false;
+    }
+    auto reference = datasets[0];
+    for (size_t i = 1; i < datasets.size(); i++)
+    {
+        if (datasets[i].get().size() != reference.get().size())
+        {
+            return false;
+        }
+    }
+    for (size_t i = 0; i < datasets.size(); i++)
+    {
+        for (size_t j = 0; j < reference.get().size(); j++)
+        {
+            if (datasets[i].get()[j].date != reference.get()[j].date)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }

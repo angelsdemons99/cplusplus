@@ -8,7 +8,7 @@ struct Position
 {
     std::string symbol;
     double weight;
-    std::vector<double> closingPrices;
+    std::vector<double> dailyReturns;
 };
 
 std::vector<double> calculateDailyReturns(const std::vector<double> &prices);

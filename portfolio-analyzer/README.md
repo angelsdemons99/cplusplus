@@ -2,17 +2,18 @@
 
 A small C++ project for loading historical market data and exploring basic portfolio-analysis ideas.
 
-This repository is still a work in progress, but it already includes sample stock data and early utilities for reading price history and preparing simple analyses.
+This repository is still a work in progress, but it already includes sample stock data and utilities for reading price history, aligning multiple symbols, and calculating portfolio returns.
 
 ## Current Focus
 
 - Load market data from text files in the data folder
 - Inspect closing-price history for multiple symbols
-- Build foundational portfolio and statistics helpers
+- Align datasets to a common start date
+- Calculate daily returns and portfolio-level statistics
 
 ## Project Structure
 
-- data/ — sample market data files for AAPL and MSFT
+- data/ — sample market data files for AAPL, MSFT, and NVDA
 - include/ — header files for market data, portfolio logic, and statistics helpers
 - src/ — implementation files for the main program and supporting modules
 
@@ -30,8 +31,8 @@ g++ -std=c++17 -O2 -Wall -Wextra -Iportfolio-analyzer/include -o portfolio-analy
 ./portfolio-analyzer/portfolio-analyzer.exe
 ```
 
-The program reads the sample data files from the data folder and prints a short summary of the loaded market data.
+The program reads the sample data files from the data folder, aligns the price histories to their latest common start date, computes daily returns for AAPL, MSFT, and NVDA, and prints a portfolio summary.
 
 ## Status
 
-This is an early progress snapshot intended to share the current direction of the project and gather feedback.
+This is an early progress snapshot intended to share the current direction of the project and gather feedback. The current implementation now includes NVDA sample data and a weighted portfolio-return calculation for hard-coded positions.

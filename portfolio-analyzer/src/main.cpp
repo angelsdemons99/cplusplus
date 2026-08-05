@@ -8,8 +8,21 @@ int main()
 {
     std::vector<MarketData> aapl_data = loadMarketData("data\\aapl.us.txt");
     std::vector<MarketData> msft_data = loadMarketData("data\\msft.us.txt");
+    std::vector<MarketData> nvda_data = loadMarketData("data\\nvda.us.txt");
     std::vector<double> aaplClosingPrices;
     std::vector<double> msftClosingPrices;
+    std::vector<double> nvdaClosingPrices;
+
+    std::vector<std::reference_wrapper<std::vector<MarketData>>> datasets{
+        std::ref(aapl_data),
+        std::ref(msft_data),
+        std::ref(nvda_data)};
+    std::string latestDate = findLatestCommonDate(datasets);
+
+    for (auto &datasetReference : datasets)
+    {
+        trimToStartDate(datasetReference.get(), latestDate);
+    }
     for (const MarketData &price : aapl_data)
     {
         aaplClosingPrices.push_back(price.close);
@@ -18,11 +31,38 @@ int main()
     {
         msftClosingPrices.push_back(price.close);
     }
-    std::cout << "AAPL # of records : " << aaplClosingPrices.size() << std::endl;
-    std::cout << "MSFT # of records : " << msftClosingPrices.size() << std::endl;
-    std::cout << "AAPL Start date : " << aapl_data[0].date << std::endl;
-    std::cout << "AAPL End date : " << aapl_data[aapl_data.size() - 1].date << std::endl;
-    std::cout << "MSFT Start date : " << msft_data[0].date << std::endl;
-    std::cout << "MSFT End date : " << msft_data[msft_data.size() - 1].date << std::endl;
-    std::cout << ("19860313" < "20260730") << std::endl;
+    for (const MarketData &price : nvda_data)
+    {
+        nvdaClosingPrices.push_back(price.close);
+    }
+
+    bool aligned = dataIsAligned(datasets);
+
+    std::cout << "AAPL # of records: " << aapl_data.size() << std::endl;
+    std::cout << "NVDA # of records: " << nvda_data.size() << std::endl;
+    std::cout << "MSFT # of records: " << msft_data.size() << std::endl;
+    std::cout << "Latest Date = " << latestDate << std::endl;
+    std::cout << "AAPL Start Date  (* TRIMMED *)= " << aapl_data[0].date << std::endl;
+    std::cout << "NVDA Start Date  (* TRIMMED *)= " << nvda_data[0].date << std::endl;
+    std::cout << "MSFT Start Date  (* TRIMMED *)= " << msft_data[0].date << std::endl;
+    std::cout << "Data is aligned? " << aligned << std::endl;
+    std::vector<double> aaplDailyReturns = calculateDailyReturns(aaplClosingPrices);
+    std::vector<double> msftDailyReturns = calculateDailyReturns(msftClosingPrices);
+    std::vector<double> nvdaDailyReturns = calculateDailyReturns(nvdaClosingPrices);
+    std::cout << "AAPL # of returns: " << aaplDailyReturns.size() << std::endl;
+    std::cout << "MSFT # of returns: " << msftDailyReturns.size() << std::endl;
+    std::cout << "NVDA # of returns: " << nvdaDailyReturns.size() << std::endl;
+    Position aaplPosition = {"AAPL", 0.50, aaplDailyReturns};
+    Position msftPosition = {"MSFT", 0.30, msftDailyReturns};
+    Position nvdaPosition = {"NVDA", 0.20, nvdaDailyReturns};
+    std::vector<Position> positions = {aaplPosition, msftPosition, nvdaPosition};
+    auto returns = calculatePortfolioReturns(positions);
+    std::cout << "Portfolio Summary" << std::endl;
+    std::cout << "-----------------" << std::endl;
+    std::cout << "Mean Daily Return : " << mean(returns) << std::endl;
+    std::cout << "Standard Deviation : " << standardDeviation(returns) << std::endl;
+    std::cout << "Minumum Daily Return : " << minimum(returns) << std::endl;
+    std::cout << "Maximum Daily Return : " << maximum(returns) << std::endl;
+    std::cout << "Number of Trading Days : " << aaplClosingPrices.size() << std::endl;
+    return 0;
 }
