@@ -1,0 +1,89 @@
+#include <iostream>
+#include <memory>
+#include <chrono>
+#include <thread>
+
+
+class Tracker {
+	public:
+		Tracker(){
+			std::cout << "constructed\n";
+		}
+		~Tracker(){
+			std::cout << "destroyed\n";
+		}
+};
+/*     //used to implement RAII manually.
+class Owner {
+	private:
+		Tracker* ptr;
+	public:
+		Owner(){
+			ptr = new Tracker();
+		}
+		~Owner(){
+			delete ptr;
+		}
+};
+*/
+
+int main() {
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(10s);
+	
+		{
+			std::cout << "unique pointers!!" << std::endl;
+			auto u_ptr1 = std::make_unique<Tracker>();
+			std::cout << "created unique pointer...u_ptr1 = " << u_ptr1 << std::endl;
+			auto u_ptr2 = std::move(u_ptr1);
+			std::cout << "moved unique pointer,,,u_ptr2 = " << u_ptr2 << std::endl;
+			Tracker* raw = u_ptr2.get();
+			std::cout << "new raw pointer that gets u_ptr2 ( doesnt own it . ) = " << raw << std::endl;
+			auto u_ptr3 = u_ptr2.release();
+			std::cout << "u_ptr2 released too u_ptr3 = " << u_ptr3 << std::endl;
+			u_ptr1.reset(new Tracker);
+			std::cout << "u_ptr1 assigned to new object and old is destroyed . now is " << u_ptr3 << std::endl;
+
+			std::cout << "leaving first scope\n";
+			
+		}
+		std::this_thread::sleep_for(10s);
+		{
+			std::cout << "shared pointer work" << std::endl;
+			auto shared = std::make_shared<Tracker>();
+			std::cout << "created shared pointer...shared ( referred to as original from now ) = " << shared << std::endl;
+			auto s_ptr2 = shared;
+			auto s_ptr5 = shared;
+			std::cout << "created another one... s_ptr2 which also owns the same tracker object " << s_ptr2 << std::endl;
+			auto s_ptr3 = shared.get();
+			std::cout << "another shared pointer but now i used to .get() i wonder if this means s_ptr3 owns the object as well....s_ptr3 = " << s_ptr3 << std::endl;
+			std::cout << "can the object be reset lets see what happens after we call .reset() on one of the pointers." << std::endl;
+			std::cout << "owner count : ( before reset ) " << shared.use_count() << std::endl;
+			s_ptr2.reset();
+			std::cout << "s_ptr2 after reset = " << s_ptr2 << std::endl;
+			std::cout << "owner count : ( after reset ) " << shared.use_count() << std::endl;
+
+
+
+			
+				
+			std::cout << "leaving second scope\n";
+		}
+		std::weak_ptr<Tracker> weak;
+		std::this_thread::sleep_for(10s);
+		{
+			std::cout << "weak pointers..." << std::endl;
+			auto pointer = std::make_shared<Tracker>();
+			std::cout << "shared pointer = " << pointer << std::endl;
+			weak = pointer;
+			std::cout << "expired yet? ( weak checks on shared ) === " << weak.expired() << std::endl;
+			std::cout << "owners : " << shared.use_count() << std::endl;
+			auto temp = weak.lock();
+			std::cout << "owners after lock() : " << shared.use_count() << std::endl;
+			temp.reset();
+			std::cout << "owners after reset on temp owner : " << shared.use_count() << std::endl;
+			std::cout << "leaving third scope" << std::endl;
+		}
+
+	return 0;
+}
