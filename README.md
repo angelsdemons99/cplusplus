@@ -7,7 +7,7 @@ A collection of C++ projects and experiments focused on core language skills, da
 - `statsengine/` — command-line statistics calculator for mean, min/max, median, variance, standard deviation, range, and mode.
 - `market-data-reader/` — CSV market data loader and pricing statistics demo.
 - `portfolio-analyzer/` — project for loading stock data (AAPL, MSFT, NVDA), aligning price histories, calculating portfolio returns, and estimating cumulative portfolio value.
-- `memoryexplorer/` — hands-on C++/GDB project for understanding how objects, pointers, stack frames, dynamic allocations, and smart pointers behave in memory.
+- `memoryexplorer/` — hands-on C++/GDB project for understanding how objects, pointers, stack frames, dynamic allocations, object lifetimes, and ownership behave in memory.
 
 ---
 
@@ -15,7 +15,7 @@ A collection of C++ projects and experiments focused on core language skills, da
 
 Memory Explorer is a low-level learning project built with C++ and GDB on Windows/MSYS2.
 
-The goal is to connect C++ source code to its actual runtime representation: addresses, raw bytes, stack frames, heap allocations, object lifetimes, and ownership.
+The goal is to connect C++ source code to its actual runtime representation: addresses, raw bytes, stack frames, heap allocations, object lifetimes, resource ownership, and eventually virtual memory and CPU behavior.
 
 ### Phase 1 — Memory & Pointers ✅
 
@@ -81,6 +81,7 @@ Explored manually managed heap memory and the failure modes that come with it.
 Concepts explored:
 
 - Stack vs. dynamically allocated storage
+- Automatic vs. dynamic object lifetime
 - `new` and `delete`
 - `new[]` and `delete[]`
 - Dynamic arrays
@@ -106,13 +107,49 @@ ptr = nullptr;
 
 Also inspected dynamic arrays in GDB and confirmed that their elements remain contiguous in memory just like ordinary arrays.
 
-### Phase 4 — RAII & Smart Pointers 🚧
+### Phase 4 — RAII & Smart Pointers ✅
 
-Currently exploring modern C++ resource ownership.
+Explored modern C++ resource ownership and how RAII can connect resource lifetime to object lifetime.
 
 First implemented RAII manually by creating an owning class whose destructor releases a dynamically allocated object.
 
 Then moved to the standard smart-pointer types.
+
+#### Manual RAII
+
+Created an owning class containing a raw pointer:
+
+```cpp
+class Owner {
+private:
+    Tracker* ptr;
+
+public:
+    Owner() {
+        ptr = new Tracker();
+    }
+
+    ~Owner() {
+        delete ptr;
+    }
+};
+```
+
+This demonstrated the core RAII idea:
+
+```text
+Owner constructed
+      ↓
+resource acquired
+      ↓
+Owner leaves scope
+      ↓
+Owner destructor runs
+      ↓
+resource released
+```
+
+The resource cleanup becomes tied to the lifetime of the owning object.
 
 #### `std::unique_ptr`
 
@@ -128,6 +165,7 @@ Concepts explored:
 - `get()`
 - `release()`
 - `reset()`
+- Difference between ownership and raw observation
 
 Observed an ownership transfer directly in GDB:
 
@@ -144,6 +182,22 @@ ptr2.get() = 0x10c450
 
 The `Tracker` object did not move in memory. Ownership of the same allocation moved from `ptr1` to `ptr2`.
 
+Also explored the difference between:
+
+```cpp
+Tracker* raw = ptr.get();
+```
+
+and:
+
+```cpp
+Tracker* raw = ptr.release();
+```
+
+`get()` exposes the address while the `unique_ptr` retains ownership.
+
+`release()` gives up ownership entirely, meaning the caller becomes responsible for eventually releasing the object.
+
 #### `std::shared_ptr`
 
 Concepts explored:
@@ -152,8 +206,10 @@ Concepts explored:
 - Reference counting
 - `std::make_shared`
 - `use_count()`
+- Copying shared ownership
 - Releasing one owner with `reset()`
 - Difference between `shared_ptr::get()` and creating another owner
+- Object destruction when the final owner disappears
 
 Example observed behavior:
 
@@ -161,6 +217,8 @@ Example observed behavior:
 owners before reset: 3
 owners after reset:  2
 ```
+
+The managed object remains alive while at least one `shared_ptr` still owns it.
 
 #### `std::weak_ptr`
 
@@ -185,7 +243,57 @@ Tracker destroyed
 weak.expired():          true
 ```
 
-The larger lesson from this phase is that smart pointers encode ownership and lifetime rules into C++ types:
+Unlike a raw pointer, a `weak_ptr` participates in the smart-pointer lifetime system and can determine whether the object it previously observed still exists.
+
+#### Circular Ownership
+
+Finished the phase by exploring one of the major failure modes of reference-counted ownership.
+
+Two objects were created that owned each other using `shared_ptr`:
+
+```text
+A ─── owns ───→ B
+↑               │
+└──── owns ─────┘
+```
+
+Each object had two owners initially:
+
+```text
+A owners: 2
+B owners: 2
+```
+
+When the local `shared_ptr` objects left scope, each reference count only dropped from `2` to `1`.
+
+Because A continued owning B and B continued owning A, neither reference count could reach zero.
+
+As a result:
+
+```text
+A destroyed
+B destroyed
+```
+
+were never printed.
+
+The objects had created a reference cycle and leaked despite using smart pointers.
+
+The cycle was then broken by changing one side of the relationship to `weak_ptr`:
+
+```text
+A ─── owns ───→ B
+↑               │
+└── observes ───┘
+```
+
+Because the `weak_ptr` does not contribute to the reference count, the objects could now be destroyed normally when their actual owners disappeared.
+
+This demonstrated an important limitation:
+
+> Smart pointers help enforce ownership rules, but they cannot automatically fix incorrect ownership design.
+
+The larger lesson from Phase 4 is that modern C++ pointer types communicate different lifetime relationships:
 
 ```text
 unique_ptr  → exclusive ownership
@@ -200,12 +308,40 @@ T*          → address with no ownership semantics encoded
 Phase 1  Memory & Pointers          ✅ Complete
 Phase 2  Stack & Function Calls     ✅ Complete
 Phase 3  Dynamic Memory             ✅ Complete
-Phase 4  RAII & Smart Pointers      🚧 In Progress
-Phase 5  Process / Virtual Memory   ⏳ Planned
+Phase 4  RAII & Smart Pointers      ✅ Complete
+Phase 5  Process / Virtual Memory   🚧 In Progress
 Phase 6  CPU / Assembly             ⏳ Planned
 Phase 7  Memory Performance         ⏳ Planned
 Phase 8  Threads & Shared Memory    ⏳ Planned
 Phase 9  Final Integration          ⏳ Planned
+```
+
+### Phase 5 — Process / Virtual Memory 🚧
+
+Currently beginning to explore how the memory addresses observed throughout the previous phases relate to the operating system and physical hardware.
+
+Initial concepts:
+
+- CPU registers vs. memory
+- Stack and heap as regions of process memory
+- Virtual addresses vs. physical addresses
+- Process virtual address spaces
+- Introduction to virtual memory
+- Introduction to the MMU
+- Automatic vs. dynamic storage lifetime
+
+The next goal is to understand the path from:
+
+```text
+C++ pointer
+    ↓
+virtual address
+    ↓
+memory page
+    ↓
+page-table translation
+    ↓
+physical memory
 ```
 
 ---
